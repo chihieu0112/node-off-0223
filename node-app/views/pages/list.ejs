@@ -1,0 +1,73 @@
+<%- include('../elements/header'); %>
+  <section class="col-lg-7 connectedSortable">
+    <!-- Custom tabs (Charts with tabs)-->
+    <!-- TO DO List -->
+    <form method="post" class="card" id="form" action="/list/action">
+      <div class="card-header">
+        <h3 class="card-title mg-b-10">
+          <i class="ion ion-clipboard mr-1"></i>
+          To Do List
+        </h3>
+        <div class="col-sm-6">
+          <!-- select -->
+            <select class="form-control" name="action">
+              <option>Bulk action</option>
+              <option value="list/change/done">Mark as done</option>
+              <option value="list/change/undone">Mark as undone</option>
+              <option value="list/change/delete">Delete</option>
+            </select>
+            <button type="submit" class="btn btn-block btn-primary">Apply</button>
+        </div>
+        <div class="card-tools">
+          <ul class="pagination pagination-sm">
+            <li class="page-item"><a href="#" class="page-link">&laquo;</a></li>
+            <% for (let i = 0; i < pagesTotal; i++) { %>
+              <li class="page-item"><a href="/list?page=<%= i+1 %>" class="page-link"><%= i+1 %></a></li>
+            <% } %>
+            <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
+          </ul>
+        </div>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <ul class="todo-list" data-widget="todo-list">
+          <% list.forEach((item)=> { %>
+            <li>
+              <!-- drag handle -->
+              <span class="handle">
+                <i class="fas fa-ellipsis-v"></i>
+                <i class="fas fa-ellipsis-v"></i>
+              </span>
+              <!-- checkbox -->
+              <div class="icheck-primary d-inline ml-2">
+                <% if (item.done) { %>
+                  <input type="checkbox" value="<%= item.id %>" name="todo" id="<%= item.id %>" checked>
+                  <% } else if (!item.done) { %>
+                    <input type="checkbox" value="<%= item.id %>" name="todo" id="<%= item.id %>">
+                  <% } %>
+                  <label for="<%= item.id %>"></label>
+              </div>
+              <!-- todo text -->
+              <span class="text">
+                <%= item.name %>
+              </span>
+              <!-- Emphasis label -->
+              <small class="badge badge-danger"><i class="far fa-clock"></i> 2 mins</small>
+              <!-- General tools such as edit or delete-->
+              <div class="tools">
+                <a href="/form/edit/<%= item.id %>" class="fas fa-edit"></a>
+                <i class="fas fa-trash-o"></i>
+              </div>
+            </li>
+            <% }) %>
+
+        </ul>
+      </div>
+      <!-- /.card-body -->
+      <div class="card-footer clearfix">
+        <a href="/form/add" class="btn btn-primary float-right"><i class="fas fa-plus"></i> Add item</a>
+      </div>
+    </div>
+    <!-- /.card -->
+  </section>
+  <%- include('../elements/footer'); %>

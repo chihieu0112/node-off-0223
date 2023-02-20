@@ -1,0 +1,21 @@
+<% statusHelper = (status, link) => { %>
+    <a href="<%= link %> ">
+        <% 
+            switch (status) {
+                case 'active': %>
+                    <span class="label label-success">
+                        <%= status %>
+                    </span>
+                <% break;
+            
+                case 'inactive': %>
+                    <span class="label label-warning">
+                        <%= status %>
+                    </span>
+                <% break;
+                default:
+                break; 
+            }
+        %>
+    </a>
+<% } %>
