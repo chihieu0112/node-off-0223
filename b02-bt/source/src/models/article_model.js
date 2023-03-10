@@ -1,6 +1,6 @@
 const { Schema , model } = require("mongoose")
 
-const CategoryModel = new Schema({
+const ItemModel = new Schema({
     name : {
         type : String,
     },
@@ -12,12 +12,18 @@ const CategoryModel = new Schema({
     },
     slug: {
         type: String
+    },
+    categoryId: {
+        type: String
+    },
+    thumbnail: {
+        type: String
     }
 }, {
     timestamps : true
 })
 
-module.exports = model('categories' , CategoryModel)
+module.exports = model('articles' , ItemModel)
 
 // var mongoose = require('mongoose')
 // const { Schema } = mongoose;

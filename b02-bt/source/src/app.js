@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const db = require('./configs/db')
 
+
 var indexRouter = require('./routes/index');
 var app = express();
 db.connect()
@@ -25,8 +26,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-const { v4: uuidv4 } = require('uuid');
-console.log(uuidv4())
+
+// app.post(
+//   "/admin/category/form/addItem",
+
+// );
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

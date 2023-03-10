@@ -3,9 +3,14 @@ const express = require('express')
 const router = express.Router()
 const categoryController = require('../../controllers/category_controller')
 
+
 router
     .route('/')
     .get(categoryController.list)
+
+router
+    .route('/status/:status')
+    .get(categoryController.listArticle)
 
 router
     .route('/form')
@@ -13,10 +18,14 @@ router
 
 router
     .route('/form/addItem')
-    .post(categoryController.createItem)
+    .post(categoryController.createCategory)
 
 router
-    .route('/:action')
-    .get(categoryController.action)
+    .route('/:categoryId')
+    .get(categoryController.listArticle)
+
+// router
+//     .route('/changeStatus')
+//     .get(categoryController.changeStatus)
 
 module.exports = router;

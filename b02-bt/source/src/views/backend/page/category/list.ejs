@@ -2,7 +2,7 @@
 
 	<div class="row mb-2">
 		<div class="col-sm-6">
-			<h1 class="m-0">Danh mục sản phẩm</h1>
+			<h1 class="m-0"><%= title %></h1>
 		</div>
 	</div>
 	<div class="card card-info card-outline">
@@ -67,7 +67,7 @@
 						</button>
 					</div>
 				</div>
-				<a href="category/form" class="btn btn-warning"
+				<a href="<%= routeAddNew %>" class="btn btn-warning"
 					style="background-color: #F0AD4E; color: white; font-weight: 500;">Add New</a>
 				<button type="button" class="btn btn-danger" onClick="deleteMultiItems('<%= linkPrefix%>delete/multi')"
 					data-toggle="modal" data-target="#modal-danger">
@@ -77,7 +77,7 @@
 		</div>
 		<div class="card-body">
 			<!-- Control -->
-			<form action="" method="post" class="table-responsive" id="zt-form">
+			<form action="category/form/addItem" method="post" class="table-responsive" id="zt-form">
 
 				<!-- List Content -->
 
@@ -93,46 +93,55 @@
 							<th class="text-center">#</a></th>
 							<th class="text-center">Name</a></th>
 							<th class="text-center">Status</a></th>
+							<% if (title === 'Article') { %>
+							<th class="text-center">Thumbnail</a></th>
+							<th class="text-center">Category</a></th>
+							<% } %>
 							<th class="text-center">Ordering</a></th>
 							<th class="text-center">Action</th>
 						</tr>
 					</thead>
 					<tbody>
+
 						<% items.forEach((item, index) => { %>
-							<tr>
+							<tr item-id="<%= item.id %>">
 								<td class="text-center">
 									<div class="custom-control custom-checkbox">
-										<input class="custom-control-input" type="checkbox" id="<%= index + 1 %>">
-										<label for="<%= index + 1 %>" class="custom-control-label"></label>
+										<input class="custom-control-input" type="checkbox" id="checkbox-<%= index + 1 %>">
+										<label for="checkbox-<%= index + 1 %>" class="custom-control-label"></label>
 									</div>
 								</td>
 								<td class="text-center"><%= index + 1 %></td>
 								<td class="text-center">
-									<%= item.name %>
+									<a href="category/<%= item.id  %>"><%= item.name  %></a>
 								</td>
-								
-								
 								<% if (item.status === "active") { %>
-									<td class="text-center position-relative">
-									<a href="" class="rounded-circle btn btn-sm btn-success"><i
-											class="fas fa-check"></i></a>
+									<td class="text-center position-relative status-wrapper">
+									<span class="rounded-circle btn btn-sm btn-success" item-status="active" onclick="changeStatus(this)"><i
+											class="fas fa-check"></i>
+									</span>
 								</td>
 								<% } else { %>
-									<td class="text-center position-relative">
-									<a href="" class="rounded-circle btn btn-sm btn-danger"><i
-											class="fas fa-ban"></i></a>
+									<td class="text-center position-relative status-wrapper">
+									<span class="rounded-circle btn btn-sm btn-danger" item-status="inactive" onclick="changeStatus(this)"><i
+											class="fas fa-ban"></i></span>
 								</td>
 								<% } %>
+								<% if (title === 'Article') { %>
+									<td class="text-center position-relative item-image">
+										<img src="/img/upload/<%= item.thumbnail %>" alt="" style="width: 100px;">
+									</td>
+									<td class="text-center position-relative status-wrapper"><%= categoryName %></td>
+								<% } %>
 								<td class="text-center position-relative">
-									<input type="number" name="items-ordering" value="<%= item.ordering %>" class="text-center ordering">
+									<input type="number" name="items-ordering" value="<%= item.ordering %>" class="text-center ordering" onchange="changeOrdering(this)">
 								</td>
-
 								<td class="text-center">
 									<a href="" class="rounded-circle btn btn-sm btn-info " title="Edit">
 										<i class="fas fa-pencil-alt"></i>
 									</a>
 
-									<button type="button" class="rounded-circle btn btn-sm btn-danger">
+									<button type="button" class="rounded-circle btn btn-sm btn-danger" onclick="removeItem(this)">
 										<i class="fas fa-trash-alt"></i>
 									</button>
 								</td>
@@ -147,3 +156,4 @@
 		<div class="col-lg-12">
 		</div>
 	</div>
+	
