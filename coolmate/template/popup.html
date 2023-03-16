@@ -1,0 +1,163 @@
+<div class="popup-hotdeal-policy">
+    <div class="popup-hotdeal-policy__content">
+        <a href="#" class="popup-hotdeal-policy__close" rel-script="close-hotdel-policy__close">
+            <img src="https://www.coolmate.me/images/close.svg" alt="close" style="border-radius: 35px;">
+        </a>
+        <div class="popup-claim">
+            <div class="popup-claim__confirm">
+                <img src="https://mcdn.coolmate.me/image/March2023/mceclip0_44.png" alt="">
+                <form action="" class="is-new-user__form" rel-script="claim-form">
+                    <div class="is-new-user__field">
+                        <input type="text" class="is-new-user__control" rel-script="claim-phone"
+                            placeholder="nhập email ngay để nhận quà từ Coolmate!">
+                        <button href="#" class="is-new-user__button" rel-script="claim-button">
+                            <svg width="16.54" height="8.35">
+                                <path
+                                    d="M12.56 7.95a.34.34 0 11-.47-.47l2.96-2.96H.64a.34.34 0 01-.34-.34.34.34 0 01.34-.33h14.41L12.1.87a.34.34 0 11.47-.47l3.54 3.54a.34.34 0 010 .47z"
+                                    data-name="Path 67" fill="currentColor" stroke="currentColor"
+                                    stroke-width=".6" />
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="is-new-user__helptext" rel-script="claim-error"></p>
+                </form>
+            </div>
+            <div class="popup-claim__success">
+                <img src="https://mcdn.coolmate.me/image/March2023/mceclip4_10.png" alt=""
+                    rel-script="claim-form-img">
+                <div class="popup-claim__coupon" rel-script="claim-coupon" data-coupon2="">
+                    XXXXXXXX
+                </div>
+                <div class="popup-claim__date" rel-script="data-date">HDS: xxx - xxx</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="6fdacc7abcf39479e8f1be14-text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        jQuery(document).ready(function ($) {
+            const _popup = $('.popup-hotdeal-policy');
+
+            $(document).on('click','[rel-script="close-hotdel-policy__close"]',function (e){
+                e.preventDefault();
+                _popup.fadeOut(300, function(){$(this).hide();})
+                theme.setCookie('check_is_popup_claim_2023','true',999);
+            })
+
+            $(document).on('click',function(e){
+                const _this = $(e.target);
+                if(_this.hasClass('popup-hotdeal-policy')) {
+                    _popup.hide();
+                    theme.setCookie('check_is_popup_claim_2023','true',999);
+                }
+            });
+
+            $(document).on('click','[rel-script="claim-toggle"]',function (e) {
+                e.preventDefault();
+                _popup.show();
+            })
+
+            function saveCode(coupon) {
+                $.ajax({
+                    url: 'https://www.coolmate.me/wishlistcoupon' + '?coupon=' + coupon + '&redirect=0',
+                    type: "GET",
+                    cache: false,
+                }).done(function(res) {
+                    theme.Loading.hide();
+                    if (res.success) {
+                        theme.PushNotify({
+                            message: res.message,
+                            level: 'message'
+                        })
+                    }
+                }).fail(() => {
+                    theme.Loading.hide();
+                    theme.PushNotify({
+                        message: 'Lưu mã thất bại!',
+                        level: 'error'
+                    })
+                }).always(() => {
+                    theme.Loading.hide()
+                })
+            }
+
+            const codeCopy = function (e) {
+                $(document).on('click', 'a[data-coupon2]', function (e) {
+                    e.preventDefault();
+                    const coupon = $(this).attr('data-coupon2');
+                    theme.Loading.show();
+                    $.ajax({
+                        url: 'https://www.coolmate.me/wishlistcoupon' + '?coupon=' + coupon + '&redirect=0',
+                        type: "GET",
+                        cache: false,
+                    }).done(function (res) {
+                        theme.Loading.hide();
+                        if (res.success) {
+                            theme.PushNotify({
+                                message: res.message,
+                                level: 'success'
+                            })
+                        }
+                    }).fail(() => {
+                            theme.Loading.hide();
+                            theme.PushNotify({
+                                message: 'Lưu mã thất bại!',
+                                level: 'error'
+                            })
+                        }
+                    ).always(() => {
+                            theme.Loading.hide()
+                        }
+                    )
+                })
+            }
+            codeCopy();
+
+            $(document).on('click','[rel-script="claim-button"]',function(e){
+                e.preventDefault();
+                const value = $(this).parents('form').find('[rel-script="claim-phone"]').val();
+                const valid = theme.validateEmail(value);
+                const _error = $(this).parents('form').find('[rel-script="claim-error"]');
+
+                if(!valid) {
+                    _error.html('Email không đúng!');
+                    return;
+                }else{
+                    const API_URL = `${window.location.origin}/lixi-coupon`;
+                    _popup.addClass('active-loading');
+                    // _popup.find('.popup-claim__confirm').html('');
+                    $.ajax({
+                        url: API_URL,
+                        type: "GET",
+                        dataType: "json",
+                        data: {
+                            email: value
+                        },
+                    }).done(function(res) {
+                        const {success,message,discount_code,start_date,end_date,detail,image,discount_type} = res;
+                        _popup.removeClass('active-loading');
+                        if(success) {
+                            theme.setCookie('check_is_popup_claim_2023','true',999);
+                            theme.setCookie('check_is_popup__claim','true',999);
+                            saveCode(discount_code);
+                            const claim = $('.popup-claim__success');
+                            claim.find('[rel-script="claim-coupon"]').html(discount_code);
+                            claim.find('[rel-script="claim-coupon"]').attr('data-coupon2',discount_code);
+                            claim.children('[rel-script="data-date"]').html('HSD: ' + start_date + ' - ' + end_date );
+                            claim.find('[rel-script="claim-form-img"]').attr('src',image);
+                            $('.popup-claim__confirm').remove();
+                            $('.popup-claim__success').addClass('is-active');
+                            if(discount_type == 'giveaway_product') {
+                                $('.popup-claim__success').addClass('gift');
+                            }else {
+                                $('.popup-claim__success').removeClass('gift');
+                            }
+                        }else{
+                            _error.html(message);
+                        }
+                    });
+                }
+            });
+        })
+    });
+</script>
