@@ -4,8 +4,6 @@ var path = require('path');
 const ArticleModel = require('../models/article_model')
 const multer = require('multer')
 const fs = require('fs')
-const imageConversion = require("image-conversion")
-const sharp = require('sharp');
 // const renameAsync = promisify(fs.rename);
 const handleError = (err, res) => {
     res
@@ -14,7 +12,7 @@ const handleError = (err, res) => {
         .end("Oops! Something went wrong!");
 };
 const upload = multer({
-    dest: "/upload"
+    // dest: "/upload"
     // you might also want to set some limits: https://github.com/expressjs/multer#limits
 });
 
@@ -113,6 +111,22 @@ module.exports = {
         }
         res.redirect(`/admin/category/${req.params.categoryId}`)
     },
+    list: async (req, res, next) => {
+        let allArticle = await ArticleModel.find({})
+        let routeAddNew = ''
+        let title = "Article"
+        let countItems = {
+            all: 0,
+            active: 0,
+            inactive: 0
+        }
+        res.render(`${renderName}/list`, {
+            items: allArticle,
+            countItems,
+            routeAddNew,
+            title
+        })
+    }
 
 
     // action: async (req, res, next) => {

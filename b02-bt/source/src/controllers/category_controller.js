@@ -4,18 +4,6 @@ var path = require('path');
 const CategoryService = require('../services/category_service')
 const CategoryModel = require('../models/category_model')
 const ItemModel = require('../models/article_model')
-const multer = require('multer')
-const fs = require('fs')
-const handleError = (err, res) => {
-    res
-        .status(500)
-        .contentType("text/plain")
-        .end("Oops! Something went wrong!");
-};
-const upload = multer({
-    dest: "/upload"
-    // you might also want to set some limits: https://github.com/expressjs/multer#limits
-});
 
 module.exports = {
     list: async (req, res, next) => {
@@ -42,7 +30,6 @@ module.exports = {
             title: 'Category'
         })
     },
-    uploadImage: upload.single('img'),
     createCategory: async (req, res, next) => {
         const { v4: uuidv4 } = require('uuid');
         const imgId = uuidv4(); 

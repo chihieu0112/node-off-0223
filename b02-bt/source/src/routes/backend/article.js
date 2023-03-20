@@ -4,6 +4,10 @@ const router = express.Router()
 const categoryController = require('../../controllers/article_controller')
 
 router
+    .route('/list')
+    .get(categoryController.list)
+
+router
     .route('/form/:categoryId')
     .get(categoryController.getForm)
 

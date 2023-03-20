@@ -97,3 +97,30 @@ function removeItem(el) {
         })
         .catch((err) => console.log(err))
 }
+
+function previewImage() {
+    const fileInput = document.getElementById('file-input');
+    const preview = document.getElementById('preview');
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+        
+            if (file) {
+              const reader = new FileReader();
+              
+              reader.addEventListener('load', function() {
+                preview.src = reader.result;
+              });
+        
+              reader.readAsDataURL(file);
+            }
+          });
+    }
+  
+
+}
+
+if (document.querySelector('h1').innerText === 'Article') {
+    previewImage()
+}
+
