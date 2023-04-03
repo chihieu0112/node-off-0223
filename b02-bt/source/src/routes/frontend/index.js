@@ -6,6 +6,6 @@ router.use((req, res, next) => {
     next();
 });
 
-router.use('/' , require('./home'))
+router.use('/' , require('./blog'))
 
 module.exports = router

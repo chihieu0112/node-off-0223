@@ -1,7 +1,8 @@
-const routerName = 'category'
+const routerName = 'article'
 const renderName = `backend/page/${routerName}/`
 var path = require('path');
 const ArticleModel = require('../models/article_model')
+const CategoryModel = require('../models/category_model')
 const multer = require('multer')
 const fs = require('fs')
 // const renameAsync = promisify(fs.rename);
@@ -12,7 +13,7 @@ const handleError = (err, res) => {
         .end("Oops! Something went wrong!");
 };
 const upload = multer({
-    // dest: "/upload"
+    dest: "/upload"
     // you might also want to set some limits: https://github.com/expressjs/multer#limits
 });
 
@@ -30,7 +31,6 @@ async function uploadAndSaveImage(data, reqFile) {
     //       cb(new Error('Only image files are allowed!'));
     //     }
     //   };
-    const allowedTypes = ['image/webp', 'image/png', 'image/jpeg'];
     if (true) {
         console.log('ok')
         return await new Promise((rs, rj) => {
@@ -79,25 +79,35 @@ async function uploadAndSaveImage(data, reqFile) {
 
 module.exports = {
     getForm: async (req, res, next) => {
-        let categoryId = req.params.categoryId
-        res.render(`${renderName}/form`, {
-            title: 'Article',
-            categoryId
-        })
+        let action = req.params.action 
+        if (action === 'addItem') {
+            let categoryList =  await CategoryModel.find({})
+            let categoryListObj = categoryList.map((item) => {
+                return {
+                    id: item._id,
+                    name: item.name
+                }
+            })
+            res.render(`${renderName}/form`, {
+                categoryListObj
+            })
+        } else if (action === 'editItem') {
+
+        }
     },
     uploadImage: upload.single('thumbnail'),
     createArticle: async (req, res, next) => {
         let item = {
             name: req.body.name,
-            ordering: Number(req.body.ordering),
             status: req.body.status,
             slug: req.body.slug,
-            categoryId: req.params.categoryId
-            // thumbnail: `image-${imgId}`
+            desc: req.body.desc,
+            categoryId: req.body.category,
+            content: req.body.content,
         }
         const file = req.file || false
+        console.log(file)
         if (file) {
-            console.log(file)
             const reqFile = {
                 tempPath: file.path,
                 originalName: file.originalname,
@@ -109,10 +119,19 @@ module.exports = {
         } else {
             await ArticleModel.create(item)
         }
-        res.redirect(`/admin/category/${req.params.categoryId}`)
+        res.redirect(`/admin/article/list`)
     },
     list: async (req, res, next) => {
         let allArticle = await ArticleModel.find({})
+        let articles = await Promise.all(
+            allArticle.map(async (item) => {
+                const category = await CategoryModel.find({_id: item.categoryId})
+                return {
+                    ...item._doc,
+                    categoryName: category.length ? category[0].name : 'Unknown'
+                }
+            })
+        )
         let routeAddNew = ''
         let title = "Article"
         let countItems = {
@@ -121,7 +140,7 @@ module.exports = {
             inactive: 0
         }
         res.render(`${renderName}/list`, {
-            items: allArticle,
+            items: articles,
             countItems,
             routeAddNew,
             title

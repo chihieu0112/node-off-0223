@@ -7,13 +7,17 @@ router
     .route('/list')
     .get(categoryController.list)
 
+// router
+//     .route('/form/addItem')
+//     .post(categoryController.uploadImage ,categoryController.createArticle)
+
 router
-    .route('/form/:categoryId')
+    .route('/form/:action')
     .get(categoryController.getForm)
 
 router
-    .route('/form/:categoryId/addItem')
-    .post(categoryController.uploadImage ,categoryController.createArticle)
+    .route('/form/addItem')
+    .post(categoryController.uploadImage, categoryController.createArticle)
 
 // router
 //     .route('/:action')

@@ -4,8 +4,8 @@ const ItemModel = new Schema({
     name : {
         type : String,
     },
-    ordering: {
-        type: Number
+    description: {
+        type: String
     },
     status: {
         type: String
@@ -17,6 +17,9 @@ const ItemModel = new Schema({
         type: String
     },
     thumbnail: {
+        type: String
+    },
+    content: {
         type: String
     }
 }, {
